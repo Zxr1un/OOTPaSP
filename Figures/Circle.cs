@@ -22,6 +22,25 @@ namespace _2_3Laba.Figures
         public int stroke_thickness_cir = 10;
         
         public Brush stroke_cir = Brushes.Red;
+
+        public Ellipse dop_center1 = new Ellipse() {
+            Fill = Brushes.Gray,
+            StrokeThickness = 1,
+            Stroke = Brushes.Red,
+            Width = 5,
+            Height = 5,
+            Visibility = Visibility.Hidden,
+            IsHitTestVisible = false
+        }, dop_center2 = new Ellipse()
+        {
+            Fill = Brushes.Gray,
+            StrokeThickness = 1,
+            Stroke = Brushes.Red,
+            Width = 5,
+            Height = 5,
+            Visibility = Visibility.Hidden,
+            IsHitTestVisible = false
+        };
         
 
 
@@ -37,7 +56,10 @@ namespace _2_3Laba.Figures
             }
             canva.Children.Add(cir);
 
-            
+            canva.Children.Add(dop_center1);
+            canva.Children.Add(dop_center2);
+
+
 
             cir.MouseLeftButtonDown += OnLMC;
             cir.MouseLeftButtonUp += OnLMU;
@@ -87,6 +109,43 @@ namespace _2_3Laba.Figures
             // Теперь вращаем вокруг центра эллипса
             RotateTransform rotateTransform = new RotateTransform(angle + dop_angle);
             cir.RenderTransform = rotateTransform;
+
+
+
+            double a = n_rad_x; 
+            double b = n_rad_y; 
+
+            double cSquared = a * a - b * b;
+            double c = (cSquared > 0) ? Math.Sqrt(cSquared) : 0;
+
+            Point f1Local = new Point(-c, 0);
+            Point f2Local = new Point(c, 0);
+
+            Point center = new Point(
+                Canvas.GetLeft(cir) + cir.Width / 2,
+                Canvas.GetTop(cir) + cir.Height / 2
+            );
+
+            double rad = (angle + dop_angle) * Math.PI / 180.0;
+            double cos = Math.Cos(rad);
+            double sin = Math.Sin(rad);
+
+            Point Rotate(Point p)
+            {
+                return new Point(
+                    center.X + p.X * cos - p.Y * sin,
+                    center.Y + p.X * sin + p.Y * cos
+                );
+            }
+
+            Point f1 = Rotate(f1Local);
+            Point f2 = Rotate(f2Local);
+
+            Canvas.SetLeft(dop_center1, f1.X - dop_center1.Width / 2);
+            Canvas.SetTop(dop_center1, f1.Y - dop_center1.Height / 2);
+
+            Canvas.SetLeft(dop_center2, f2.X - dop_center2.Width / 2);
+            Canvas.SetTop(dop_center2, f2.Y - dop_center2.Height / 2);
 
             base.Draw();
         }
@@ -147,6 +206,19 @@ namespace _2_3Laba.Figures
         {
             base.Delete();
             canva.Children.Remove(cir);
+        }
+
+        public override void Select()
+        {
+            base.Select();
+            dop_center1.Visibility = Visibility.Visible;
+            dop_center2.Visibility = Visibility.Visible;
+        }
+        public override void Deselect()
+        {
+            base.Deselect();
+            dop_center1.Visibility = Visibility.Collapsed;
+            dop_center2.Visibility = Visibility.Collapsed;
         }
 
         public override void Load(JsonElement el)
