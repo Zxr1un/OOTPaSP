@@ -1,0 +1,404 @@
+{
+  "type": "scene",
+  "name": "\u0421\u0446\u0435\u043D\u0430",
+  "glob": {
+    "X": 0,
+    "Y": 0
+  },
+  "center_loc": {
+    "X": 0,
+    "Y": 0
+  },
+  "scale": 1,
+  "angle": 0,
+  "dop_angle": 0,
+  "color": "#00FFFFFF",
+  "children": [
+    {
+      "type": "superfigure",
+      "name": "4_\u041E\u0431\u044A\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u0435",
+      "glob": {
+        "X": 827.7777777777778,
+        "Y": 359.29292929292933
+      },
+      "center_loc": {
+        "X": 0,
+        "Y": 0
+      },
+      "scale": 1,
+      "angle": 0,
+      "dop_angle": 0,
+      "color": "#00FFFFFF",
+      "children": [
+        {
+          "type": "polygon",
+          "name": "2_\u041F\u0440\u044F\u043C\u043E\u0443\u0433\u043E\u043B\u044C\u043D\u0438\u043A",
+          "glob": {
+            "X": 658.0000000000001,
+            "Y": 292.8484848484849
+          },
+          "center_loc": {
+            "X": 0,
+            "Y": 0
+          },
+          "scale": 1,
+          "angle": 0,
+          "dop_angle": 0,
+          "color": "#00FFFFFF",
+          "points": [
+            {
+              "X": -50,
+              "Y": -50
+            },
+            {
+              "X": -50,
+              "Y": 50
+            },
+            {
+              "X": 50,
+              "Y": 50
+            },
+            {
+              "X": 50,
+              "Y": -50
+            }
+          ],
+          "children": [
+            {
+              "type": "side",
+              "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04300",
+              "glob": {
+                "X": 608.0000000000001,
+                "Y": 242.84848484848487
+              },
+              "center_loc": {
+                "X": 0,
+                "Y": 0
+              },
+              "scale": 1,
+              "angle": 0,
+              "dop_angle": 0,
+              "color": "#00FFFFFF",
+              "index": 0,
+              "glob_2": {
+                "X": 608.0000000000001,
+                "Y": 342.8484848484849
+              },
+              "thickness": 10,
+              "color_s": "#FFFF0000",
+              "children": []
+            },
+            {
+              "type": "side",
+              "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04301",
+              "glob": {
+                "X": 608.0000000000001,
+                "Y": 342.8484848484849
+              },
+              "center_loc": {
+                "X": 0,
+                "Y": 0
+              },
+              "scale": 1,
+              "angle": 0,
+              "dop_angle": 0,
+              "color": "#00FFFFFF",
+              "index": 1,
+              "glob_2": {
+                "X": 708.0000000000001,
+                "Y": 342.8484848484849
+              },
+              "thickness": 10,
+              "color_s": "#FFFF0000",
+              "children": []
+            },
+            {
+              "type": "side",
+              "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04302",
+              "glob": {
+                "X": 708.0000000000001,
+                "Y": 342.8484848484849
+              },
+              "center_loc": {
+                "X": 0,
+                "Y": 0
+              },
+              "scale": 1,
+              "angle": 0,
+              "dop_angle": 0,
+              "color": "#00FFFFFF",
+              "index": 2,
+              "glob_2": {
+                "X": 708.0000000000001,
+                "Y": 242.84848484848487
+              },
+              "thickness": 10,
+              "color_s": "#FFFF0000",
+              "children": []
+            },
+            {
+              "type": "side",
+              "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04303",
+              "glob": {
+                "X": 708.0000000000001,
+                "Y": 242.84848484848487
+              },
+              "center_loc": {
+                "X": 0,
+                "Y": 0
+              },
+              "scale": 1,
+              "angle": 0,
+              "dop_angle": 0,
+              "color": "#00FFFFFF",
+              "index": 3,
+              "glob_2": {
+                "X": 608.0000000000001,
+                "Y": 242.84848484848487
+              },
+              "thickness": 10,
+              "color_s": "#FFFF0000",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "polygon",
+          "name": "1_\u0422\u0440\u0435\u0443\u0433\u043E\u043B\u044C\u043D\u0438\u043A",
+          "glob": {
+            "X": 753.3333333333334,
+            "Y": 484.8484848484849
+          },
+          "center_loc": {
+            "X": 0,
+            "Y": 0
+          },
+          "scale": 1,
+          "angle": 0,
+          "dop_angle": 0,
+          "color": "#00FFFFFF",
+          "points": [
+            {
+              "X": -50,
+              "Y": -28.87
+            },
+            {
+              "X": 50,
+              "Y": -28.87
+            },
+            {
+              "X": 0,
+              "Y": 57.74
+            }
+          ],
+          "children": [
+            {
+              "type": "side",
+              "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04300",
+              "glob": {
+                "X": 703.3333333333334,
+                "Y": 455.97848484848487
+              },
+              "center_loc": {
+                "X": 0,
+                "Y": 0
+              },
+              "scale": 1,
+              "angle": 0,
+              "dop_angle": 0,
+              "color": "#00FFFFFF",
+              "index": 0,
+              "glob_2": {
+                "X": 803.3333333333334,
+                "Y": 455.97848484848487
+              },
+              "thickness": 10,
+              "color_s": "#FFFF0000",
+              "children": []
+            },
+            {
+              "type": "side",
+              "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04301",
+              "glob": {
+                "X": 803.3333333333334,
+                "Y": 455.97848484848487
+              },
+              "center_loc": {
+                "X": 0,
+                "Y": 0
+              },
+              "scale": 1,
+              "angle": 0,
+              "dop_angle": 0,
+              "color": "#00FFFFFF",
+              "index": 1,
+              "glob_2": {
+                "X": 753.3333333333334,
+                "Y": 542.5884848484849
+              },
+              "thickness": 10,
+              "color_s": "#FFFF0000",
+              "children": []
+            },
+            {
+              "type": "side",
+              "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04302",
+              "glob": {
+                "X": 753.3333333333334,
+                "Y": 542.5884848484849
+              },
+              "center_loc": {
+                "X": 0,
+                "Y": 0
+              },
+              "scale": 1,
+              "angle": 0,
+              "dop_angle": 0,
+              "color": "#00FFFFFF",
+              "index": 2,
+              "glob_2": {
+                "X": 703.3333333333334,
+                "Y": 455.97848484848487
+              },
+              "thickness": 10,
+              "color_s": "#FFFF0000",
+              "children": []
+            }
+          ]
+        },
+        {
+          "type": "polygon",
+          "name": "3_\u0422\u0440\u0430\u043F\u0435\u0446\u0438\u044F",
+          "glob": {
+            "X": 1072,
+            "Y": 300.1818181818182
+          },
+          "center_loc": {
+            "X": 0,
+            "Y": 0
+          },
+          "scale": 1,
+          "angle": 0,
+          "dop_angle": 0,
+          "color": "#00FFFFFF",
+          "points": [
+            {
+              "X": -50,
+              "Y": -50
+            },
+            {
+              "X": -25,
+              "Y": 50
+            },
+            {
+              "X": 25,
+              "Y": 50
+            },
+            {
+              "X": 50,
+              "Y": -50
+            }
+          ],
+          "children": [
+            {
+              "type": "side",
+              "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04300",
+              "glob": {
+                "X": 1022,
+                "Y": 250.1818181818182
+              },
+              "center_loc": {
+                "X": 0,
+                "Y": 0
+              },
+              "scale": 1,
+              "angle": 0,
+              "dop_angle": 0,
+              "color": "#00FFFFFF",
+              "index": 0,
+              "glob_2": {
+                "X": 1047,
+                "Y": 350.1818181818182
+              },
+              "thickness": 10,
+              "color_s": "#FFFF0000",
+              "children": []
+            },
+            {
+              "type": "side",
+              "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04301",
+              "glob": {
+                "X": 1047,
+                "Y": 350.1818181818182
+              },
+              "center_loc": {
+                "X": 0,
+                "Y": 0
+              },
+              "scale": 1,
+              "angle": 0,
+              "dop_angle": 0,
+              "color": "#00FFFFFF",
+              "index": 1,
+              "glob_2": {
+                "X": 1097,
+                "Y": 350.1818181818182
+              },
+              "thickness": 10,
+              "color_s": "#FFFF0000",
+              "children": []
+            },
+            {
+              "type": "side",
+              "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04302",
+              "glob": {
+                "X": 1097,
+                "Y": 350.1818181818182
+              },
+              "center_loc": {
+                "X": 0,
+                "Y": 0
+              },
+              "scale": 1,
+              "angle": 0,
+              "dop_angle": 0,
+              "color": "#00FFFFFF",
+              "index": 2,
+              "glob_2": {
+                "X": 1122,
+                "Y": 250.1818181818182
+              },
+              "thickness": 10,
+              "color_s": "#FFFF0000",
+              "children": []
+            },
+            {
+              "type": "side",
+              "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04303",
+              "glob": {
+                "X": 1122,
+                "Y": 250.1818181818182
+              },
+              "center_loc": {
+                "X": 0,
+                "Y": 0
+              },
+              "scale": 1,
+              "angle": 0,
+              "dop_angle": 0,
+              "color": "#00FFFFFF",
+              "index": 3,
+              "glob_2": {
+                "X": 1022,
+                "Y": 250.1818181818182
+              },
+              "thickness": 10,
+              "color_s": "#FFFF0000",
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

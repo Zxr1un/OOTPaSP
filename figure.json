@@ -1,0 +1,60 @@
+{
+  "type": "superfigure",
+  "name": "2_\u041E\u0431\u044A\u0435\u0434\u0438\u043D\u0435\u043D\u0438\u0435",
+  "glob": {
+    "X": 775,
+    "Y": 478
+  },
+  "center_loc": {
+    "X": 0,
+    "Y": 0
+  },
+  "scale": 1,
+  "angle": 0,
+  "dop_angle": 0,
+  "color": "#00FFFFFF",
+  "children": [
+    {
+      "type": "circle",
+      "name": "1_\u041A\u0440\u0443\u0433",
+      "glob": {
+        "X": 477.0000000000001,
+        "Y": 386.00000000000006
+      },
+      "center_loc": {
+        "X": 0,
+        "Y": 0
+      },
+      "scale": 1,
+      "angle": 45,
+      "dop_angle": 0,
+      "color": "#00FFFFFF",
+      "radius": 100,
+      "stroke_thickness_cir": 10,
+      "stroke_cir": "#FFFF0000",
+      "e": 2,
+      "children": []
+    },
+    {
+      "type": "circle",
+      "name": "1_\u041A\u0440\u0443\u0433",
+      "glob": {
+        "X": 1073,
+        "Y": 570
+      },
+      "center_loc": {
+        "X": 0,
+        "Y": 0
+      },
+      "scale": 1,
+      "angle": 45,
+      "dop_angle": 0,
+      "color": "#00FFFFFF",
+      "radius": 100,
+      "stroke_thickness_cir": 10,
+      "stroke_cir": "#FFFF0000",
+      "e": 2,
+      "children": []
+    }
+  ]
+}

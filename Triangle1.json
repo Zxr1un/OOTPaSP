@@ -1,0 +1,104 @@
+{
+  "type": "polygon",
+  "name": "1_\u0422\u0440\u0435\u0443\u0433\u043E\u043B\u044C\u043D\u0438\u043A",
+  "glob": {
+    "X": 943,
+    "Y": 346
+  },
+  "center_loc": {
+    "X": 0,
+    "Y": 0
+  },
+  "scale": 1,
+  "angle": 0,
+  "dop_angle": 0,
+  "color": "#FFFFFFFF",
+  "points": [
+    {
+      "X": -50,
+      "Y": -28.87
+    },
+    {
+      "X": 50,
+      "Y": -28.87
+    },
+    {
+      "X": 0,
+      "Y": 57.74
+    }
+  ],
+  "children": [
+    {
+      "type": "side",
+      "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04300",
+      "glob": {
+        "X": 893,
+        "Y": 317.13
+      },
+      "center_loc": {
+        "X": 0,
+        "Y": 0
+      },
+      "scale": 1,
+      "angle": 0,
+      "dop_angle": 0,
+      "color": "#00FFFFFF",
+      "index": 0,
+      "glob_2": {
+        "X": 993,
+        "Y": 317.13
+      },
+      "thickness": 10,
+      "color_s": "#FFFFA500",
+      "children": []
+    },
+    {
+      "type": "side",
+      "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04301",
+      "glob": {
+        "X": 993,
+        "Y": 317.13
+      },
+      "center_loc": {
+        "X": 0,
+        "Y": 0
+      },
+      "scale": 1,
+      "angle": 0,
+      "dop_angle": 0,
+      "color": "#00FFFFFF",
+      "index": 1,
+      "glob_2": {
+        "X": 943,
+        "Y": 403.74
+      },
+      "thickness": 10,
+      "color_s": "#FFFF0000",
+      "children": []
+    },
+    {
+      "type": "side",
+      "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04302",
+      "glob": {
+        "X": 943,
+        "Y": 403.74
+      },
+      "center_loc": {
+        "X": 0,
+        "Y": 0
+      },
+      "scale": 1,
+      "angle": 0,
+      "dop_angle": 0,
+      "color": "#00FFFFFF",
+      "index": 2,
+      "glob_2": {
+        "X": 893,
+        "Y": 317.13
+      },
+      "thickness": 10,
+      "color_s": "#FFFF0000",
+      "children": []
+    }
+  ]
+}

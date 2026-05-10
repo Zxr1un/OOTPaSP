@@ -1,0 +1,132 @@
+{
+  "type": "polygon",
+  "name": "1_\u0422\u0440\u0430\u043F\u0435\u0446\u0438\u044F",
+  "glob": {
+    "X": 648,
+    "Y": 367
+  },
+  "center_loc": {
+    "X": 0,
+    "Y": 0
+  },
+  "scale": 1,
+  "angle": 0,
+  "dop_angle": 0,
+  "color": "#FFA9A9A9",
+  "points": [
+    {
+      "X": -50,
+      "Y": -50
+    },
+    {
+      "X": -25,
+      "Y": 50
+    },
+    {
+      "X": 25,
+      "Y": 50
+    },
+    {
+      "X": 50,
+      "Y": -50
+    }
+  ],
+  "children": [
+    {
+      "type": "side",
+      "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04300",
+      "glob": {
+        "X": 598,
+        "Y": 317
+      },
+      "center_loc": {
+        "X": 0,
+        "Y": 0
+      },
+      "scale": 1,
+      "angle": 0,
+      "dop_angle": 0,
+      "color": "#00FFFFFF",
+      "index": 0,
+      "glob_2": {
+        "X": 623,
+        "Y": 417
+      },
+      "thickness": 10,
+      "color_s": "#FFFF0000",
+      "children": []
+    },
+    {
+      "type": "side",
+      "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04301",
+      "glob": {
+        "X": 623,
+        "Y": 417
+      },
+      "center_loc": {
+        "X": 0,
+        "Y": 0
+      },
+      "scale": 1,
+      "angle": 0,
+      "dop_angle": 0,
+      "color": "#00FFFFFF",
+      "index": 1,
+      "glob_2": {
+        "X": 673,
+        "Y": 417
+      },
+      "thickness": 10,
+      "color_s": "#FF808080",
+      "children": []
+    },
+    {
+      "type": "side",
+      "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04302",
+      "glob": {
+        "X": 673,
+        "Y": 417
+      },
+      "center_loc": {
+        "X": 0,
+        "Y": 0
+      },
+      "scale": 1,
+      "angle": 0,
+      "dop_angle": 0,
+      "color": "#00FFFFFF",
+      "index": 2,
+      "glob_2": {
+        "X": 698,
+        "Y": 317
+      },
+      "thickness": 10,
+      "color_s": "#FFFF0000",
+      "children": []
+    },
+    {
+      "type": "side",
+      "name": "\u0421\u0442\u043E\u0440\u043E\u043D\u04303",
+      "glob": {
+        "X": 698,
+        "Y": 317
+      },
+      "center_loc": {
+        "X": 0,
+        "Y": 0
+      },
+      "scale": 1,
+      "angle": 0,
+      "dop_angle": 0,
+      "color": "#00FFFFFF",
+      "index": 3,
+      "glob_2": {
+        "X": 598,
+        "Y": 317
+      },
+      "thickness": 10,
+      "color_s": "#FFFF0000",
+      "children": []
+    }
+  ]
+}

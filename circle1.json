@@ -1,0 +1,21 @@
+{
+  "type": "circle",
+  "name": "1_\u041A\u0440\u0443\u0433",
+  "glob": {
+    "X": 630,
+    "Y": 373
+  },
+  "center_loc": {
+    "X": 0,
+    "Y": 0
+  },
+  "scale": 1,
+  "angle": 45,
+  "dop_angle": 0,
+  "color": "#00FFFFFF",
+  "radius": 100,
+  "stroke_thickness_cir": 10,
+  "stroke_cir": "#FFFF0000",
+  "e": 2,
+  "children": []
+}

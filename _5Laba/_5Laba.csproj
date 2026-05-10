@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <RootNamespace>_5Laba</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="_5Laba_library.dll" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="_5Laba_library">
+      <HintPath>_5Laba_library.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
