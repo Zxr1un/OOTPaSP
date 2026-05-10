@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -51,10 +52,23 @@ namespace _5Laba
                 Circle_Thickness.IsEnabled = false;
                 if (polygonMy.points.Count > 0) SideChoose.SelectedIndex = 0;
             }
-
+            Ellipse_CenterInFocus.IsEnabled = false;
             if (figure is Circle cir)
             {
                 circle = cir;
+                Ellipse_CenterInFocus.IsEnabled = true;
+                if (circle.center_at_focus)
+                {
+                    Ellipse_CenterInFocus.IsChecked = true;
+                    X_centr_loc.IsEnabled = false;
+                    Y_centr_loc.IsEnabled = false;
+                }
+                else
+                {
+                    Ellipse_CenterInFocus.IsChecked = false;
+                    X_centr_loc.IsEnabled = true;
+                    Y_centr_loc.IsEnabled = true;
+                }
                 SideChoose.IsEnabled = false;
                 SideColor.IsEnabled = false;
                 SideThickness.IsEnabled = false;
@@ -494,6 +508,16 @@ namespace _5Laba
                 {
                     if (Convert.ToDouble(Eccentr_Thickness.Text) < 0.001) return;
                     sir1.e = Convert.ToDouble(Eccentr_Thickness.Text);
+                    if (Ellipse_CenterInFocus.IsChecked == true && sir1.center_at_focus)
+                    {
+                        double angl = figure.angle;
+                        figure.angle = 0;
+                        circle.center_loc = new(0,0);
+                        sir1.Move();
+                        circle.center_loc = new Point(Canvas.GetLeft(circle.dop_center1) + circle.dop_center1.Width / 2 - circle.glob.X, Canvas.GetTop(circle.dop_center1) + circle.dop_center1.Height / 2 - circle.glob.Y);
+                        sir1.Move();
+                        figure.angle = angl;
+                    }
                     figure.Move();
                 }
                 catch { }
@@ -581,6 +605,37 @@ namespace _5Laba
             }
         }
 
+        private void Ellipse_CenterInFocus_Checked(object sender, RoutedEventArgs e)
+        {
+            on_check();
+        }
+        private void Ellipse_CenterInFocus_Unchecked(object sender, RoutedEventArgs e)
+        {
+            on_check();
+        }
+        private void on_check()
+        {
+            circle.center_loc = new Point(0, 0);
+            circle.Move();
+            if (circle != null)
+            {
+                if (Ellipse_CenterInFocus.IsChecked == true)
+                {
+                    circle.center_loc = new Point(Canvas.GetLeft(circle.dop_center1) + circle.dop_center1.Width / 2 - circle.glob.X, Canvas.GetTop(circle.dop_center1) + circle.dop_center1.Height / 2 - circle.glob.Y);
+                    circle.center_at_focus = true;
+                    X_centr_loc.IsEnabled = false;
+                    Y_centr_loc.IsEnabled = false;
+                }
+                else
+                {
+                    
+                    circle.center_at_focus = false;
+                    X_centr_loc.IsEnabled = true;
+                    Y_centr_loc.IsEnabled = true;
+                }
+                circle.Move();
+            }
+        }
 
     }
 

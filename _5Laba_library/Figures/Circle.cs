@@ -8,17 +8,19 @@ using System.Windows.Shapes;
 
 namespace _5Laba_library
 {
-    public class Circle: FigureMy
+    public class Circle : FigureMy
     {
         public Ellipse cir = new Ellipse();
         public double st_radius = 100;
         public double e = 1.0;
-        
+        public bool center_at_focus = false;
+
         public int stroke_thickness_cir = 10;
-        
+
         public Brush stroke_cir = Brushes.Red;
 
-        public Ellipse dop_center1 = new Ellipse() {
+        public Ellipse dop_center1 = new Ellipse()
+        {
             Fill = Brushes.Gray,
             StrokeThickness = 1,
             Stroke = Brushes.Red,
@@ -36,12 +38,12 @@ namespace _5Laba_library
             Visibility = Visibility.Hidden,
             IsHitTestVisible = false
         };
-        
+
 
 
         public override void base_init(bool reinitial = false)
         {
-            if(name == "Figure") name = SE.Get_nomber() + "_" + "Круг";
+            if (name == "Figure") name = SE.Get_nomber() + "_" + "Круг";
             type = "circle";
             canva = SE.canva;
             if (!reinitial)
@@ -65,7 +67,7 @@ namespace _5Laba_library
 
         public override FigureMy Clone(FigureMy part = null, FigureMy parentCop = null)
         {
-            
+
             Circle copy = new Circle();
             copy.st_radius = st_radius;
             copy.stroke_thickness_cir = stroke_thickness_cir;
@@ -88,11 +90,9 @@ namespace _5Laba_library
         public override void Draw()
         {
 
-            double n_rad_x = (double)st_radius * scale * e;  
+            double n_rad_x = (double)st_radius * scale * e;
             double n_rad_y = (double)st_radius * scale;
 
-            Canvas.SetLeft(cir, glob.X + center_loc.X - n_rad_x);
-            Canvas.SetTop(cir, glob.Y + center_loc.Y - n_rad_y);
             cir.Width = n_rad_x * 2;
             cir.Height = n_rad_y * 2;
             cir.StrokeThickness = stroke_thickness_cir;
@@ -107,8 +107,8 @@ namespace _5Laba_library
 
 
 
-            double a = n_rad_x; 
-            double b = n_rad_y; 
+            double a = n_rad_x;
+            double b = n_rad_y;
 
             double cSquared = a * a - b * b;
             double c = (cSquared > 0) ? Math.Sqrt(cSquared) : 0;
@@ -117,19 +117,33 @@ namespace _5Laba_library
             Point f2Local = new Point(c, 0);
 
             Point center = new Point(
-                Canvas.GetLeft(cir) + cir.Width / 2,
-                Canvas.GetTop(cir) + cir.Height / 2
+                glob.X + center_loc.X,
+                glob.Y + center_loc.Y
             );
+
 
             double rad = (angle + dop_angle) * Math.PI / 180.0;
             double cos = Math.Cos(rad);
             double sin = Math.Sin(rad);
 
+            Point pivot = new Point(glob.X, glob.Y);
+
+            // центр эллипса вращается вместе с фигурой
+            Point rotatedCenter = new Point(
+                pivot.X + center_loc.X * cos - center_loc.Y * sin,
+                pivot.Y + center_loc.X * sin + center_loc.Y * cos
+            );
+
+            Canvas.SetLeft(cir, rotatedCenter.X - n_rad_x);
+            Canvas.SetTop(cir, rotatedCenter.Y - n_rad_y);
+
             Point Rotate(Point p)
             {
                 return new Point(
-                    center.X + p.X * cos - p.Y * sin,
-                    center.Y + p.X * sin + p.Y * cos
+                    pivot.X + center_loc.X * cos - center_loc.Y * sin
+                        + p.X * cos - p.Y * sin,
+                    pivot.Y + center_loc.X * sin + center_loc.Y * cos
+                        + p.X * sin + p.Y * cos
                 );
             }
 
@@ -142,12 +156,19 @@ namespace _5Laba_library
             Canvas.SetLeft(dop_center2, f2.X - dop_center2.Width / 2);
             Canvas.SetTop(dop_center2, f2.Y - dop_center2.Height / 2);
 
+
+
             base.Draw();
         }
         public override void Update_borders()
         {
-            double a = st_radius * scale * e; 
-            double b = st_radius * scale; 
+            Point pivot = new Point(
+                glob.X + center_loc.X,
+                glob.Y + center_loc.Y
+            );
+
+            double a = st_radius * scale * e;
+            double b = st_radius * scale;
 
             Point center = new Point(glob.X + center_loc.X, glob.Y + center_loc.Y);
 
@@ -158,8 +179,15 @@ namespace _5Laba_library
             double width_rotated = 2 * Math.Sqrt(a * a * cos * cos + b * b * sin * sin);
             double height_rotated = 2 * Math.Sqrt(a * a * sin * sin + b * b * cos * cos);
 
-            b_p1 = new Point(center.X - width_rotated / 2, center.Y - height_rotated / 2);
-            b_p2 = new Point(center.X + width_rotated / 2, center.Y + height_rotated / 2);
+            double dx = center_loc.X;
+            double dy = center_loc.Y;
+            Point rotatedCenter = new Point(
+                glob.X + dx * cos - dy * sin,
+                glob.Y + dx * sin + dy * cos
+            );
+
+            b_p1 = new Point(rotatedCenter.X - width_rotated / 2, rotatedCenter.Y - height_rotated / 2);
+            b_p2 = new Point(rotatedCenter.X + width_rotated / 2, rotatedCenter.Y + height_rotated / 2);
 
             base.Update_borders();
         }
@@ -201,6 +229,8 @@ namespace _5Laba_library
         {
             base.Delete();
             canva.Children.Remove(cir);
+            canva.Children.Remove(dop_center1);
+            canva.Children.Remove(dop_center2);
         }
 
         public override void Select()

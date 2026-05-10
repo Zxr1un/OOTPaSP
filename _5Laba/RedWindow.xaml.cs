@@ -29,7 +29,7 @@ namespace _5Laba
         {
             this.figure = figure;
             InitializeComponent();
-            
+
             FillColorComboBox.ItemsSource = Enum.GetValues(typeof(FigureColor));
             Circle_LineColorComboBox.ItemsSource = Enum.GetValues(typeof(FigureColor));
             SideColor.ItemsSource = Enum.GetValues(typeof(FigureColor));
@@ -44,16 +44,29 @@ namespace _5Laba
                 SideChoose.Items.Clear();
                 for (int i = 0; i < polygonMy.points.Count; i++) SideChoose.Items.Add($"Сторона {i}");
                 // ВАЖНО: сразу выбрать первую сторону
-                if (SideChoose.Items.Count > 0)  SideChoose.SelectedIndex = 0;
+                if (SideChoose.Items.Count > 0) SideChoose.SelectedIndex = 0;
                 FillColorComboBox.IsEnabled = true;
                 Circle_LineColorComboBox.IsEnabled = false;
                 Circle_Thickness.IsEnabled = false;
                 if (polygonMy.points.Count > 0) SideChoose.SelectedIndex = 0;
             }
-
+            Ellipse_CenterInFocus.IsEnabled = false;
             if (figure is Circle cir)
             {
                 circle = cir;
+                Ellipse_CenterInFocus.IsEnabled = true;
+                if (circle.center_at_focus)
+                {
+                    Ellipse_CenterInFocus.IsChecked = true;
+                    X_centr_loc.IsEnabled = false;
+                    Y_centr_loc.IsEnabled = false;
+                }
+                else
+                {
+                    Ellipse_CenterInFocus.IsChecked = false;
+                    X_centr_loc.IsEnabled = true;
+                    Y_centr_loc.IsEnabled = true;
+                }
                 SideChoose.IsEnabled = false;
                 SideColor.IsEnabled = false;
                 SideThickness.IsEnabled = false;
@@ -65,7 +78,7 @@ namespace _5Laba
                 AngleBox.IsEnabled = false;
                 Eccentr_Thickness.IsEnabled = true;
             }
-            if(figure is AllFigures scene)
+            if (figure is AllFigures scene)
             {
                 X_cord_glob.IsEnabled = true;
                 Y_cord_glob.IsEnabled = true;
@@ -94,7 +107,7 @@ namespace _5Laba
             Figure_Name.Text = figure.name;
             FigureMy par = figure.parent;
             Borders_Values.Content = "Границы (В.Л и Н.П.): " + $"({figure.b_p1.X.ToString("F0")},{figure.b_p1.Y.ToString("F0")}) и ({figure.b_p2.X.ToString("F0")},{figure.b_p2.Y.ToString("F0")})";
-            if(par != null)
+            if (par != null)
             {
                 X_cord_glob.Text = par.getLocal(figure.glob).X.ToString("F0");
                 Y_cord_glob.Text = par.getLocal(figure.glob).Y.ToString("F0");
@@ -105,11 +118,11 @@ namespace _5Laba
                 Y_cord_glob.Text = figure.glob.Y.ToString("F0");
             }
 
-            if(polygonMy != null)
+            if (polygonMy != null)
             {
                 FillColorComboBox.SelectedItem = polygonMy.color.FromBrush();
             }
-                
+
             X_centr_loc.Text = figure.center_loc.X.ToString("F0");
             Y_centr_loc.Text = figure.center_loc.Y.ToString("F0");
             Scale_box.Text = figure.scale.ToString("F3");
@@ -144,7 +157,7 @@ namespace _5Laba
             X2_box.Text = p2.X.ToString("F0");
             Y2_box.Text = p2.Y.ToString("F0");
 
-            
+
 
             var side = polygonMy.sides[i];
             SideThickness.Text = side.thickness.ToString();
@@ -273,7 +286,7 @@ namespace _5Laba
 
             try
             {
-                
+
                 int i = selectedSideIndex;
                 int next = (i + 1) % polygonMy.points.Count;
 
@@ -333,7 +346,8 @@ namespace _5Laba
 
         private void Figure_Name_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (Figure_Name.Text.Length > 0) {
+            if (Figure_Name.Text.Length > 0)
+            {
                 figure.name = Figure_Name.Text;
                 SE.UpdateHierarchy();
             }
@@ -449,14 +463,14 @@ namespace _5Laba
         {
             try
             {
-                if(figure is Circle cir)
+                if (figure is Circle cir)
                 {
                     cir.stroke_thickness_cir = Convert.ToInt32(Circle_Thickness.Text);
                     cir.Move();
                 }
-                
+
             }
-            catch {}
+            catch { }
         }
 
         private void Circle_Thickness_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -487,16 +501,26 @@ namespace _5Laba
 
         private void Eccentr_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if(figure is Circle sir1)
+            if (figure is Circle sir1)
             {
                 try
                 {
                     if (Convert.ToDouble(Eccentr_Thickness.Text) < 0.001) return;
                     sir1.e = Convert.ToDouble(Eccentr_Thickness.Text);
+                    if (Ellipse_CenterInFocus.IsChecked == true && sir1.center_at_focus)
+                    {
+                        double angl = figure.angle;
+                        figure.angle = 0;
+                        circle.center_loc = new(0, 0);
+                        sir1.Move();
+                        circle.center_loc = new Point(Canvas.GetLeft(circle.dop_center1) + circle.dop_center1.Width / 2 - circle.glob.X, Canvas.GetTop(circle.dop_center1) + circle.dop_center1.Height / 2 - circle.glob.Y);
+                        sir1.Move();
+                        figure.angle = angl;
+                    }
                     figure.Move();
                 }
                 catch { }
-                
+
             }
         }
 
@@ -509,9 +533,9 @@ namespace _5Laba
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             figure.RW = null;
-            if(polygonMy  != null)
+            if (polygonMy != null)
             {
-                foreach(Side s in polygonMy.sides)
+                foreach (Side s in polygonMy.sides)
                 {
                     s.Deselect();
                 }
@@ -521,7 +545,7 @@ namespace _5Laba
 
         private void DeleteButton_Click_1(object sender, RoutedEventArgs e)
         {
-            
+
             Close();
             figure.Delete();
             figure.RW = null;
@@ -577,6 +601,38 @@ namespace _5Laba
                 string path = dialog.FileName;
 
                 FigureFactory.SaveToFile(figure, path);
+            }
+        }
+
+        private void Ellipse_CenterInFocus_Checked(object sender, RoutedEventArgs e)
+        {
+            on_check();
+        }
+        private void Ellipse_CenterInFocus_Unchecked(object sender, RoutedEventArgs e)
+        {
+            on_check();
+        }
+        private void on_check()
+        {
+            circle.center_loc = new Point(0, 0);
+            circle.Move();
+            if (circle != null)
+            {
+                if (Ellipse_CenterInFocus.IsChecked == true)
+                {
+                    circle.center_loc = new Point(Canvas.GetLeft(circle.dop_center1) + circle.dop_center1.Width / 2 - circle.glob.X, Canvas.GetTop(circle.dop_center1) + circle.dop_center1.Height / 2 - circle.glob.Y);
+                    circle.center_at_focus = true;
+                    X_centr_loc.IsEnabled = false;
+                    Y_centr_loc.IsEnabled = false;
+                }
+                else
+                {
+
+                    circle.center_at_focus = false;
+                    X_centr_loc.IsEnabled = true;
+                    Y_centr_loc.IsEnabled = true;
+                }
+                circle.Move();
             }
         }
 
