@@ -409,7 +409,7 @@ namespace _5Laba
         {
             try
             {
-                figure.center_loc.X = Convert.ToInt16(X_centr_loc.Text);
+                figure.center_loc = new Point(Convert.ToInt16(X_centr_loc.Text), figure.center_loc.Y);
                 figure.Move();
             }
             catch { }
@@ -418,7 +418,7 @@ namespace _5Laba
         {
             try
             {
-                figure.center_loc.Y = Convert.ToInt16(Y_centr_loc.Text);
+                figure.center_loc = new Point(figure.center_loc.X, Convert.ToInt16(Y_centr_loc.Text));
                 figure.Move();
             }
             catch { }

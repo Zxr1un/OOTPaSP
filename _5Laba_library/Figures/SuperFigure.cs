@@ -64,8 +64,7 @@ namespace _5Laba_library
             }
             av_x = av_x / children.Count;
             av_y = av_y / children.Count;
-            glob.X = av_x;
-            glob.Y = av_y;
+            glob = new Point(av_x, av_y);
             if (children.Count == 0) Delete();
             Move();
         }

@@ -16,9 +16,9 @@ namespace _5Laba_library
         private bool isDrawing = false;
         private IHandleLineEditWindow lineEditWindow = null;
 
-        public double dop_angle = 0;       // глобальный угол последней линии
+        public double dop_angle { get; set; } = 0;       // глобальный угол последней линии
         private List<double> angles = new List<double>();
-        public double angle_cur = 0;
+        public double angle_cur { get; set; } = 0;
 
         public HandlePolygon()
         {

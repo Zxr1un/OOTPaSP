@@ -10,16 +10,16 @@ namespace _5Laba_library
 {
     public class Circle : FigureMy
     {
-        public Ellipse cir = new Ellipse();
-        public double st_radius = 100;
-        public double e = 1.0;
-        public bool center_at_focus = false;
+        public Ellipse cir { get; set; } = new Ellipse();
+        public double st_radius { get; set; } = 100;
+        public double e { get; set; } = 1.0;
+        public bool center_at_focus { get; set; } = false;
 
-        public int stroke_thickness_cir = 10;
+        public int stroke_thickness_cir { get; set; } = 10;
 
-        public Brush stroke_cir = Brushes.Red;
+        public Brush stroke_cir { get; set; } = Brushes.Red;
 
-        public Ellipse dop_center1 = new Ellipse()
+        public Ellipse dop_center1 { get; set; } = new Ellipse()
         {
             Fill = Brushes.Gray,
             StrokeThickness = 1,
@@ -28,7 +28,9 @@ namespace _5Laba_library
             Height = 5,
             Visibility = Visibility.Hidden,
             IsHitTestVisible = false
-        }, dop_center2 = new Ellipse()
+        };
+
+        public Ellipse dop_center2 { get; set; } = new Ellipse()
         {
             Fill = Brushes.Gray,
             StrokeThickness = 1,

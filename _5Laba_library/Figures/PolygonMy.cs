@@ -10,9 +10,9 @@ namespace _5Laba_library
     public class PolygonMy: FigureMy
     {
 
-        public List<Side> sides = new(); //Список сторон
-        public List<Point> points = new(); // список точек (относительный)
-        public Polygon poly = new Polygon()
+        public List<Side> sides { get; set; } = new(); //Список сторон
+        public List<Point> points { get; set; } = new(); // список точек (относительный)
+        public Polygon poly { get; set; } = new Polygon()
         {
             Stroke = Brushes.Transparent,
             Fill = Brushes.Green,

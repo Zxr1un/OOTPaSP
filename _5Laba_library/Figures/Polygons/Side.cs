@@ -9,13 +9,16 @@ namespace _5Laba_library
     
     public class Side: PolygonMy
     {
-        public int Index;
+        public int Index { get; set; }
 
-        public Vector vector;
-        public Point glob_2;
-        public Point T_P1, T_P2, H_P1, H_P2;
-        public Brush color_s = Brushes.Red;
-        public int thickness = 10;
+        public Vector vector { get; set; }
+        public Point glob_2 { get; set; }
+        public Point T_P1 { get; set; }
+        public Point T_P2 { get; set; }
+        public Point H_P1 { get; set; }
+        public Point H_P2 { get; set; }
+        public Brush color_s { get; set; } = Brushes.Red;
+        public int thickness { get; set; } = 10;
 
         public override FigureMy Clone(FigureMy part = null, FigureMy parentCop = null)
         {

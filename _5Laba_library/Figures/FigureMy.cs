@@ -12,19 +12,20 @@ namespace _5Laba_library
     public class FigureMy
     {
         public Guid Id { get; set; } = Guid.NewGuid();
-        public Canvas canva = null;
-        public string type = "figure";
-        public Point glob = new Point(0, 0);
-        public Brush color = Brushes.Transparent;
+        public Canvas canva { get; set; } = null;
+        public string type { get; set; } = "figure";
+        public Point glob { get; set; } = new Point(0, 0);
+        public Brush color { get; set; } = Brushes.Transparent;
 
-        public Point center_loc = new Point(0, 0);
-        public double scale = 1;
-        public double angle = 0;
-        public double dop_angle = 0;
-        public string name = "Figure";
+        public Point center_loc { get; set; } = new Point(0, 0);
+        public double scale { get; set; } = 1;
+        public double angle { get; set; } = 0;
+        public double dop_angle { get; set; } = 0;
+        public string name { get; set; } = "Figure";
 
-        public Point b_p1 = new(0, 0), b_p2 = new(0, 0);
-        public Rectangle border = new Rectangle()
+        public Point b_p1 { get; set; } = new(0, 0);
+        public Point b_p2 { get; set; } = new(0, 0);
+        public Rectangle border { get; set; } = new Rectangle()
         {
             Visibility = Visibility.Hidden,
             StrokeThickness = 2,
@@ -32,7 +33,7 @@ namespace _5Laba_library
             Fill = Brushes.Transparent,
             IsHitTestVisible = false
         };
-        public Ellipse CenterPoint = new Ellipse()
+        public Ellipse CenterPoint { get; set; } = new Ellipse()
         {
             Fill = Brushes.White,
             StrokeThickness = 2,
@@ -43,13 +44,13 @@ namespace _5Laba_library
             IsHitTestVisible = false
         };
 
-        public FigureMy parent = null;
-        public ObservableCollection<FigureMy> children = new();
+        public FigureMy parent { get; set; } = null;
+        public ObservableCollection<FigureMy> children { get; set; } = new();
 
-        public IRedWindow RW = null;
-        internal bool dropping = false;
-        internal Point shapeStartPosition;
-        internal Point lastMousePosition;
+        public IRedWindow RW { get; set; } = null;
+        internal bool dropping { get; set; } = false;
+        internal Point shapeStartPosition { get; set; }
+        internal Point lastMousePosition { get; set; }
 
         public virtual FigureMy Clone(FigureMy part = null, FigureMy parentCop = null)
         {
