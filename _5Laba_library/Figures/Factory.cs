@@ -1,24 +1,27 @@
-﻿using System;
+﻿using _5Laba_InterfacesLibrary;
+using System.IO;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Media;
-using System.IO;
+using System.Xml.Linq;
 
 namespace _5Laba_library
 {
-    public static class FigureFactory
+    public class FigureFactory: IFigureFactory
     {
-
-        public static FigureMy FromJson(string json)
+        public IWindowsFactory WF { get; set; }
+        public IFigureFactory FFref { get; set; }
+        public ISE SEref { get; set; }
+        public IFigureMy FromJson(string json)
         {
             using JsonDocument doc = JsonDocument.Parse(json);
             return ParseFigure(doc.RootElement, null);
         }
-        private static FigureMy ParseFigure(JsonElement el, FigureMy parent)
+        private IFigureMy ParseFigure(JsonElement el, IFigureMy parent)
         {
             string type = GetString(el, "type");
 
-            FigureMy fig = CreateByType(type);
+            IFigureMy fig = CreateByType(type);
 
             fig.parent = parent;
 
@@ -60,36 +63,44 @@ namespace _5Laba_library
 
             return fig;
         }
-        private static FigureMy CreateByType(string type)
+        private IFigureMy CreateByType(string type)
         {
             return type switch
             {
-                "circle" => new Circle(),
-                "polygon" => new PolygonMy(),
-                "superfigure" => new SuperFigure(),
-                "side" => new Side(null, new(0,0), new(0,0)),
-                "scene" => new AllFigures(),
-                _ => new FigureMy()
+                "circle" => new Circle(FFref,SEref, WF),
+                "polygon" => new PolygonMy(FFref, SEref, WF),
+                "superfigure" => new SuperFigure(FFref, SEref, WF),
+                "side" => new Side(FFref, SEref, WF, null, new(0,0), new(0,0)),
+                "scene" => new Scene(FFref, SEref, WF),
+                _ => new FigureMy(FFref, SEref, WF)
             };
         }
 
+        public FigureFactory(IFigureFactory fFref, ISE sEref, IWindowsFactory wF)
+        {
+            FFref = this;
+            SEref = sEref;
+            WF = wF;
+        }
+
+
 
         // Вспомогательное
-        public static string GetString(JsonElement el, string name)
+        public string GetString(JsonElement el, string name)
         {
             return el.TryGetProperty(name, out var v)
                 ? v.GetString()
                 : null;
         }
 
-        public static double GetDouble(JsonElement el, string name, double def = 0)
+        public double GetDouble(JsonElement el, string name, double def = 0)
         {
             return el.TryGetProperty(name, out var v)
                 ? v.GetDouble()
                 : def;
         }
 
-        public static Point GetPoint(JsonElement el, string name)
+        public Point GetPoint(JsonElement el, string name)
         {
             if (!el.TryGetProperty(name, out var v))
                 return new Point(0, 0);
@@ -100,7 +111,7 @@ namespace _5Laba_library
             return new Point(x, y);
         }
 
-        public static string BrushToString(Brush brush)
+        public string BrushToString(Brush brush)
         {
             if (brush is SolidColorBrush scb)
                 return scb.Color.ToString();
@@ -109,17 +120,17 @@ namespace _5Laba_library
         }
 
 
-        public static FigureMy Load(string json)
+        public IFigureMy Load(string json)
         {
-            FigureMy fig = FromJson(json);
-            if(!(fig is AllFigures)) fig.Insert();
+            IFigureMy fig = FromJson(json);
+            if(!(fig is Scene)) fig.Insert();
             return fig;
         }
 
 
 
 
-        public static void SaveToFile(FigureMy root, string path)
+        public void SaveToFile(IFigureMy root, string path)
         {
             var obj = SerializeFigure(root);
 
@@ -131,7 +142,7 @@ namespace _5Laba_library
             File.WriteAllText(path, json);
         }
 
-        private static object SerializeFigure(FigureMy fig)
+        private object SerializeFigure(IFigureMy fig)
         {
             var dict = new Dictionary<string, object>();
 
@@ -160,7 +171,7 @@ namespace _5Laba_library
             return dict;
         }
 
-        private static void FillCustomFields(FigureMy fig, Dictionary<string, object> dict)
+        private void FillCustomFields(IFigureMy fig, Dictionary<string, object> dict)
         {
             if (fig is Circle c)
             {
@@ -194,6 +205,75 @@ namespace _5Laba_library
             {
                 // пока пусто
             }
+        }
+
+
+
+        public IFigureMy newFM(string Name = "Фигура")
+        {
+            FigureMy fig = new FigureMy(FFref, SEref, WF, Name);
+            fig.name = fig.SEref.Get_nomber() + "_" + Name;
+            return fig;
+        }
+        public ICircle newC(string Name = "Эллипс")
+        {
+            Circle fig = new Circle(FFref, SEref, WF);
+            fig.name = fig.SEref.Get_nomber() + "_" + Name;
+            return fig;
+        }
+        public IHandlePolygon newHP(string Name = "Полилиния")
+        {
+            HandlePolygon fig = new HandlePolygon(FFref, SEref, WF);
+            fig.name = fig.SEref.Get_nomber() + "_" + Name;
+            return fig;
+        }
+        public IPolygonMy newP(int sides, string Name = "Многоугольник")
+        {
+
+            PolygonMy poly =
+                new PolygonMy(FFref, SEref, WF);
+            poly.name = poly.SEref.Get_nomber() + "_" + Name;
+            poly.points.Clear();
+
+            double side = 100;
+
+            // Радиус описанной окружности
+            double R =
+                side / (2 * Math.Sin(Math.PI / sides));
+
+            // Чтобы вершина была сверху
+            double startAngle = -Math.PI / 2;
+
+            for (int i = 0; i < sides; i++)
+            {
+                double angle =
+                    startAngle + 2 * Math.PI * i / sides;
+
+                double x = R * Math.Cos(angle);
+                double y = R * Math.Sin(angle);
+
+                poly.points.Add(new Point(x, y));
+            }
+
+            return poly;
+        }
+        public ISuperFigure newSF(string Name = "Объединение")
+        {
+            SuperFigure fig = new SuperFigure(FFref, SEref, WF);
+            fig.name = fig.SEref.Get_nomber() + "_" + Name;
+            return fig;
+        }
+        public ISide newSide(IPolygonMy par, Point p1, Point p2, string Name = "Сторона")
+        {
+            Side fig = new Side(FFref, SEref, WF, par, p1, p2);
+            fig.name = "_" + Name;
+            return fig;
+        }
+        public IScene newSC(string Name = "Сцена")
+        {
+            Scene fig = new Scene(FFref, SEref, WF);
+            fig.name = "_" + Name;
+            return fig;
         }
 
     }

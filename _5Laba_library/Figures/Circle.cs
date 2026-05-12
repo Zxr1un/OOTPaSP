@@ -1,4 +1,4 @@
-﻿using System.Text;
+﻿using _5Laba_InterfacesLibrary;
 using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
@@ -8,7 +8,7 @@ using System.Windows.Shapes;
 
 namespace _5Laba_library
 {
-    public class Circle : FigureMy
+    public class Circle : FigureMy, ICircle
     {
         public Ellipse cir { get; set; } = new Ellipse();
         public double st_radius { get; set; } = 100;
@@ -41,16 +41,19 @@ namespace _5Laba_library
             IsHitTestVisible = false
         };
 
-
+        public Circle(IFigureFactory fFref, ISE ser, IWindowsFactory wf) : base(fFref, ser, wf)
+        {
+            type = "circle";
+        }
 
         public override void base_init(bool reinitial = false)
         {
-            if (name == "Figure") name = SE.Get_nomber() + "_" + "Круг";
+            if (name == "Figure") name = SEref.Get_nomber() + "_" + "Круг";
             type = "circle";
-            canva = SE.canva;
+            canva = SEref.canva;
             if (!reinitial)
             {
-                Point start_pos = SE.Get_center();
+                Point start_pos = SEref.Get_center();
                 Move(start_pos.X, start_pos.Y);
             }
             canva.Children.Add(cir);
@@ -67,17 +70,17 @@ namespace _5Laba_library
             base.base_init(reinitial);
         }
 
-        public override FigureMy Clone(FigureMy part = null, FigureMy parentCop = null)
+        public override IFigureMy Clone(IFigureMy part = null, IFigureMy parentCop = null)
         {
 
-            Circle copy = new Circle();
+            ICircle copy = FFref.newC();
             copy.st_radius = st_radius;
             copy.stroke_thickness_cir = stroke_thickness_cir;
             copy.stroke_cir = stroke_cir;
             copy.e = e;
             return base.Clone(copy, parentCop);
         }
-        public override void Insert(FigureMy par = null)
+        public override void Insert(IFigureMy par = null)
         {
             base.Insert(par);
 
@@ -200,7 +203,7 @@ namespace _5Laba_library
             // Сохраняем позицию мыши в момент нажатия
             lastMousePosition = e.GetPosition(canva);
             cir.CaptureMouse(); // Захватываем мышь для надежности
-            SE.Select(this);
+            SEref.Select(this);
         }
         public void OnLMU(object sender, MouseEventArgs e) // Обработчик отпускания
         {
@@ -210,7 +213,7 @@ namespace _5Laba_library
 
         public void OnRMC(object sender, RoutedEventArgs e)
         {
-            SE.Select(this);
+            SEref.Select(this);
             Edit();
         }
         public void MouseMoving(object sender, MouseEventArgs e)
@@ -253,7 +256,7 @@ namespace _5Laba_library
             if (el.TryGetProperty("radius", out var r)) st_radius = r.GetDouble();
             if (el.TryGetProperty("stroke_thickness_cir", out var th)) stroke_thickness_cir = (int)th.GetDouble();
             if (el.TryGetProperty("e", out var ec)) e = ec.GetDouble();
-            string color = FigureFactory.GetString(el, "stroke_cir");
+            string color = FFref.GetString(el, "stroke_cir");
             if (!string.IsNullOrEmpty(color))
             {
                 try
@@ -267,11 +270,11 @@ namespace _5Laba_library
             }
         }
 
-        public override void Save(FigureMy fig, Dictionary<string, object> dict)
+        public override void Save(IFigureMy fig, Dictionary<string, object> dict)
         {
             dict["radius"] = st_radius;
             dict["stroke_thickness_cir"] = stroke_thickness_cir;
-            dict["stroke_cir"] = FigureFactory.BrushToString(stroke_cir);
+            dict["stroke_cir"] = FFref.BrushToString(stroke_cir);
             dict["e"] = e;
         }
     }

@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="_5Laba_library">
-      <HintPath>_5Laba_library.dll</HintPath>
+    <Reference Include="_5Laba_InterfacesLibrary">
+      <HintPath>..\_5Laba_InterfacesLibrary\bin\Debug\net8.0-windows\_5Laba_InterfacesLibrary.dll</HintPath>
     </Reference>
   </ItemGroup>
 

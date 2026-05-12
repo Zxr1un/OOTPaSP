@@ -1,4 +1,6 @@
-﻿using System.Text.Json;
+﻿using _5Laba_InterfacesLibrary;
+using System.Runtime.ConstrainedExecution;
+using System.Text.Json;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -7,10 +9,10 @@ using System.Windows.Shapes;
 
 namespace _5Laba_library
 {
-    public class PolygonMy: FigureMy
+    public class PolygonMy: FigureMy, IPolygonMy
     {
 
-        public List<Side> sides { get; set; } = new(); //Список сторон
+        public List<ISide> sides { get; set; } = new(); //Список сторон
         public List<Point> points { get; set; } = new(); // список точек (относительный)
         public Polygon poly { get; set; } = new Polygon()
         {
@@ -20,13 +22,13 @@ namespace _5Laba_library
         }; //полигон фона
 
 
-        public override FigureMy Clone(FigureMy part = null, FigureMy parentCop = null)
+        public override IFigureMy Clone(IFigureMy part = null, IFigureMy parentCop = null)
         {
             if (part is Side s1)
             {
                 return base.Clone(s1, parentCop);
             }
-            PolygonMy copy = new();
+            PolygonMy copy = new(FFref, SEref, WF);
             foreach (Point p in points) {
                 copy.points.Add(new(p.X, p.Y));
             }
@@ -45,12 +47,12 @@ namespace _5Laba_library
 
             return null;
         }
-        public override void Insert(FigureMy par = null)
+        public override void Insert(IFigureMy par = null)
         {
             base.Insert(par);
         }
 
-        public PolygonMy()
+        public PolygonMy(IFigureFactory fFref, ISE ser, IWindowsFactory wf) : base(fFref, ser, wf)
         {
             type = "polygon";
         }
@@ -61,10 +63,10 @@ namespace _5Laba_library
                 base.base_init(reinitial);
                 return;
             }
-            canva = SE.canva;
+            canva = SEref.canva;
             if (!reinitial)
             {
-                Point start_pos = SE.Get_center();
+                Point start_pos = SEref.Get_center();
                 glob = start_pos;
             }
             canva.Children.Add(poly);
@@ -86,13 +88,13 @@ namespace _5Laba_library
                 }
                 for (int i = 0; i < points.Count - 1; i++)
                 {
-                    Side side = new Side(this, getGlobal(points[i]), getGlobal(points[i + 1]));
+                    Side side = new Side(FFref, SEref, WF,this, getGlobal(points[i]), getGlobal(points[i + 1]));
                     side.base_init();
                     side.Index = i;
                     side.name = "Сторона" + i.ToString();
                     sides.Add(side);
                 }
-                Side sideLast = new Side(this, getGlobal(points[points.Count - 1]), getGlobal(points[0]));
+                Side sideLast = new Side(FFref, SEref, WF, this, getGlobal(points[points.Count - 1]), getGlobal(points[0]));
                 sideLast.base_init();
                 sideLast.Index = points.Count - 1;
                 sideLast.name = "Сторона" + sideLast.Index.ToString();
@@ -143,8 +145,8 @@ namespace _5Laba_library
 
                     if (sides.Count > 1)
                     {
-                        Side prev = (i > 0) ? sides[i - 1] : sides[sides.Count - 1];
-                        Side next = (i < sides.Count - 1) ? sides[i + 1] : sides[0];
+                        ISide prev = (i > 0) ? sides[i - 1] : sides[sides.Count - 1];
+                        ISide next = (i < sides.Count - 1) ? sides[i + 1] : sides[0];
 
                         sides[i].UpdatePoints(p1, p2, prev, next);
                     }
@@ -195,14 +197,13 @@ namespace _5Laba_library
         }
 
 
-
         public void OnLMC(object sender, MouseEventArgs e)
         {
             dropping = true;
             // Сохраняем позицию мыши в момент нажатия
             lastMousePosition = e.GetPosition(canva);
             poly.CaptureMouse(); // Захватываем мышь для надежности
-            SE.Select(this);
+            SEref.Select(this);
         }
         public void OnLMU(object sender, MouseEventArgs e) // Обработчик отпускания
         {
@@ -211,7 +212,7 @@ namespace _5Laba_library
         }
         public void OnRMC(object sender, RoutedEventArgs e)
         {
-            SE.Select(this);
+            SEref.Select(this);
             Edit();
         }
         public void MouseMoving(object sender, MouseEventArgs e)
@@ -260,7 +261,7 @@ namespace _5Laba_library
             
         }
 
-        public override void Save(FigureMy fig, Dictionary<string, object> dict)
+        public override void Save(IFigureMy fig, Dictionary<string, object> dict)
         {
             dict["points"] = points;
         }

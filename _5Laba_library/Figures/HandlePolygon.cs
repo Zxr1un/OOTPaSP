@@ -1,4 +1,4 @@
-﻿// HandlePolygon.cs
+﻿using _5Laba_InterfacesLibrary;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -7,7 +7,7 @@ using System.Windows.Shapes;
 
 namespace _5Laba_library
 {
-    public class HandlePolygon : FigureMy
+    public class HandlePolygon : FigureMy, IHandlePolygon
     {
         private List<Point> points = new();
         private Line currentLine = null;
@@ -20,9 +20,9 @@ namespace _5Laba_library
         private List<double> angles = new List<double>();
         public double angle_cur { get; set; } = 0;
 
-        public HandlePolygon()
+        public HandlePolygon(IFigureFactory fFref, ISE ser, IWindowsFactory wf) : base(fFref, ser, wf)
         {
-            canvas = SE.canva;
+            canvas = SEref.canva;
         }
 
         public void Start()
@@ -42,10 +42,10 @@ namespace _5Laba_library
 
             canvas.Focusable = true;
             canvas.Focus();
-            lineEditWindow = WindowsFactory.Current.new_LEW(
+            lineEditWindow = WF.new_LEW(
                 canvas.PointToScreen(start).X + 20,
                 canvas.PointToScreen(start).Y + 20,
-                SE.MW,
+                SEref.MW,
                 this
             );
             //lineEditWindow = new HandleLineEditWindow
@@ -299,9 +299,9 @@ namespace _5Laba_library
 
 
 
-            Point g_c = SE.Get_center();
-            PolygonMy poly = new PolygonMy();
-            poly.name = SE.Get_nomber() + "_" + "Своя фигура";
+            Point g_c = SEref.Get_center();
+            PolygonMy poly = new PolygonMy(FFref, SEref, WF);
+            poly.name = SEref.Get_nomber() + "_" + "Своя фигура";
 
             foreach (var p in points)
                 poly.points.Add(new Point(p.X - g_c.X, p.Y - g_c.Y));

@@ -4,13 +4,20 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using _5Laba_InterfacesLibrary;
 
 
 
 namespace _5Laba_library
 {
-    public class FigureMy
+    public class FigureMy: IFigureMy
     {
+        public IWindowsFactory WF { get; set; }
+        public IFigureFactory FFref { get; set; }
+        public ISE SEref { get; set; }
+
+
+
         public Guid Id { get; set; } = Guid.NewGuid();
         public Canvas canva { get; set; } = null;
         public string type { get; set; } = "figure";
@@ -44,18 +51,18 @@ namespace _5Laba_library
             IsHitTestVisible = false
         };
 
-        public FigureMy parent { get; set; } = null;
-        public ObservableCollection<FigureMy> children { get; set; } = new();
+        public IFigureMy parent { get; set; } = null;
+        public ObservableCollection<IFigureMy> children { get; set; } = new();
 
         public IRedWindow RW { get; set; } = null;
-        internal bool dropping { get; set; } = false;
-        internal Point shapeStartPosition { get; set; }
-        internal Point lastMousePosition { get; set; }
+        public bool dropping { get; set; } = false;
+        public Point shapeStartPosition { get; set; }
+        public Point lastMousePosition { get; set; }
 
-        public virtual FigureMy Clone(FigureMy part = null, FigureMy parentCop = null)
+        public virtual IFigureMy Clone(IFigureMy part = null, IFigureMy parentCop = null)
         {
-            FigureMy copy;
-            if (part == null) copy = new FigureMy();
+            IFigureMy copy;
+            if (part == null) copy = FFref.newFM();
             else copy = part;
             copy.type = type;
             copy.glob = new(glob.X, glob.Y);
@@ -83,9 +90,9 @@ namespace _5Laba_library
             copy.CenterPoint.IsHitTestVisible = CenterPoint.IsHitTestVisible;
 
             copy.parent = parentCop;
-            foreach (FigureMy ch in children)
+            foreach (IFigureMy ch in children)
             {
-                FigureMy copyCh = ch.Clone(null, copy);
+                IFigureMy copyCh = ch.Clone(null, copy);
                 if (!(copyCh is Side))
                 {
                     copy.children.Add(copyCh);
@@ -93,16 +100,16 @@ namespace _5Laba_library
             }
             return copy;
         }
-        public virtual void Insert(FigureMy par = null)
+        public virtual void Insert(IFigureMy par = null)
         {
-            FigureMy test = this;
+            IFigureMy test = this;
             if (par == null)
             {
-                parent = SE.Scene;
-                SE.Scene.children.Add(this);
+                parent = SEref.Scene;
+                SEref.Scene.children.Add(this);
             }
             else parent = par;
-            foreach (FigureMy ch in children)
+            foreach (IFigureMy ch in children)
             {
                 ch.Insert(this);
             }
@@ -110,21 +117,25 @@ namespace _5Laba_library
             Move();
         }
 
-        public FigureMy(string Name = "Figure")
+        public FigureMy(IFigureFactory fFref, ISE ser, IWindowsFactory wf, string Name = "Figure")
         {
             //name = SE.Get_nomber() + "_" + Name;
-            canva = SE.canva;
+            
+            FFref = fFref;
+            SEref = ser;
+            canva = SEref.canva;
+            WF = wf;
         }
         public virtual void base_init(bool reinitial = false)
         {
-            if (parent == null && !(this is Side) && !(this is AllFigures))
+            if (parent == null && !(this is Side) && !(this is Scene))
             {
-                parent = SE.Scene;
-                SE.Scene.children.Add(this);
+                parent = SEref.Scene;
+                SEref.Scene.children.Add(this);
             }
             canva.Children.Add(border);
             canva.Children.Add(CenterPoint);
-            SE.UpdateHierarchy();
+            SEref.UpdateHierarchy();
 
         }
 
@@ -163,9 +174,9 @@ namespace _5Laba_library
             //    Move(glob.X + dx, glob.Y + dy);
             //    foreach (FigureMy ch in children) d_Move(dx, dy);
             //}
-            foreach (FigureMy sel in SE.selected)
+            foreach (FigureMy sel in SEref.selected)
             {
-                if (sel.parent is AllFigures) sel.d_Move(dx, dy);
+                if (sel.parent is Scene) sel.d_Move(dx, dy);
             }
         }
         public virtual void setScale(double new_scale)
@@ -180,7 +191,7 @@ namespace _5Laba_library
             Canvas.SetTop(CenterPoint, glob.Y - CenterPoint.Height / 2);
 
             Update_borders();
-            SE.UpdateHierarchy();
+            SEref.UpdateHierarchy();
         }
         public virtual void Update_borders()
         {
@@ -200,7 +211,7 @@ namespace _5Laba_library
         public virtual void Edit()
         {
             if (RW != null) return;
-            IRedWindow red = WindowsFactory.Current.new_RW(this);
+            IRedWindow red = WF.new_RW(this);
             RW = red;
             red.Show();
         }
@@ -210,7 +221,7 @@ namespace _5Laba_library
             {
                 parent.children.Remove(this);
             }
-            if (!(this is AllFigures))
+            if (!(this is Scene))
             {
                 if (parent != null && parent.children.Count == 0) parent.Delete();
                 else if (parent != null && parent is SuperFigure SF)
@@ -227,7 +238,7 @@ namespace _5Laba_library
                 ch.Delete();
             }
             children.Clear();
-            SE.UpdateHierarchy();
+            SEref.UpdateHierarchy();
 
         }
 
@@ -240,7 +251,7 @@ namespace _5Laba_library
         {
             border.Visibility = Visibility.Visible;
             CenterPoint.Visibility = Visibility.Visible;
-            if (parent != null && !(parent is AllFigures)) parent.Select();
+            if (parent != null && !(parent is Scene)) parent.Select();
         }
 
         public virtual void Rejection()
@@ -250,9 +261,9 @@ namespace _5Laba_library
                 dop_angle = 0;
                 parent.children.Remove(this);
                 if (parent is SuperFigure par) par.AddFigure();
-                parent = SE.Scene;
-                SE.Scene.children.Add(this);
-                SE.UpdateHierarchy();
+                parent = SEref.Scene;
+                SEref.Scene.children.Add(this);
+                SEref.UpdateHierarchy();
             }
         }
 
@@ -297,7 +308,7 @@ namespace _5Laba_library
         {
             // базовые поля уже заполнены фабрикой
         }
-        public virtual void Save(FigureMy fig, Dictionary<string, object> dict)
+        public virtual void Save(IFigureMy fig, Dictionary<string, object> dict)
         {
             // базовые поля уже заполнены фабрикой
         }

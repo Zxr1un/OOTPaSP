@@ -1,24 +1,26 @@
-﻿using System.Windows;
+﻿using _5Laba_InterfacesLibrary;
+using System.Windows;
 using System.Windows.Media;
 
 namespace _5Laba_library
 {
-    public class SuperFigure: FigureMy
+    public class SuperFigure: FigureMy, ISuperFigure
     {
-        public SuperFigure() {
+        public SuperFigure(IFigureFactory fFref, ISE ser, IWindowsFactory wf) : base(fFref, ser, wf)
+        {
             type = "superfigure";
         }
         public override void base_init(bool reinitial = false)
         {
-            if (this is AllFigures) return;
+            if (this is Scene) return;
             border.Stroke = Brushes.DarkCyan;
-            name = SE.Get_nomber() + "_" + "Объединение";
+            name = SEref.Get_nomber() + "_" + "Объединение";
             base.base_init(reinitial);
         }
 
-        public override FigureMy Clone(FigureMy part = null, FigureMy parentCop = null)
+        public override IFigureMy Clone(IFigureMy part = null, IFigureMy parentCop = null)
         {
-            FigureMy SF = new SuperFigure();
+            FigureMy SF = new SuperFigure(FFref, SEref, WF);
             return base.Clone(SF, parentCop);
         }
 
@@ -45,17 +47,17 @@ namespace _5Laba_library
 
        
 
-        public void AddFigure(FigureMy figure = null)
+        public void AddFigure(IFigureMy figure = null)
         {
 
             double av_x = 0;
             double av_y = 0;
             if (figure != null) {
-                FigureMy par = figure.parent;
+                IFigureMy par = figure.parent;
                 if (par != null) par.children.Remove(figure);
                 figure.parent = this;
                 children.Add(figure);
-                SE.UpdateHierarchy();
+                SEref.UpdateHierarchy();
             }
             foreach(FigureMy ch in children)
             {

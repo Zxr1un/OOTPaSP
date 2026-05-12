@@ -1,8 +1,7 @@
-﻿// HandleLineEditWindow.xaml.cs
-using _5Laba_library;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using _5Laba_InterfacesLibrary;
 
 namespace _5Laba
 {
@@ -26,12 +25,12 @@ namespace _5Laba
 
         private bool suppressEvent = false;
 
-        public HandlePolygon ParentPolygon1 {
+        public IHandlePolygon ParentPolygon1 {
             get => this.ParentPolygon;
-            set => this.ParentPolygon = value;
+            set => this.ParentPolygon = value as IHandlePolygon;
         }
 
-        public HandlePolygon ParentPolygon;
+        public IHandlePolygon ParentPolygon;
 
         public HandleLineEditWindow()
         {
@@ -44,7 +43,7 @@ namespace _5Laba
             if (e.Key == Key.Space)
             {
                 e.Handled = true; // чтобы окно не обработало Space
-                ParentPolygon?.FinishPolygonWithSpace();
+                ParentPolygon.FinishPolygonWithSpace();
             }
         }
 

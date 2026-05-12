@@ -1,5 +1,4 @@
-﻿using _5Laba_library;
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -7,6 +6,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using _5Laba_InterfacesLibrary;
 
 namespace _5Laba
 {
@@ -17,15 +17,15 @@ namespace _5Laba
     {
         public bool IsPolygon = true;
         public bool IsSuperFigure = false;
-        public FigureMy figure = null;
+        public IFigureMy figure = null;
 
-        public Circle circle = null;
-        public PolygonMy polygonMy = null;
-        public SuperFigure SF = null;
+        public ICircle circle = null;
+        public IPolygonMy polygonMy = null;
+        public ISuperFigure SF = null;
 
         private int selectedSideIndex = -1;
         private bool isUpdatingUI = false;
-        public RedWindow(FigureMy figure)
+        public RedWindow(IFigureMy figure)
         {
             this.figure = figure;
             InitializeComponent();
@@ -34,11 +34,11 @@ namespace _5Laba
             Circle_LineColorComboBox.ItemsSource = Enum.GetValues(typeof(FigureColor));
             SideColor.ItemsSource = Enum.GetValues(typeof(FigureColor));
 
-            SE.Register(HierarchyTree);
+            SE.se.Register(HierarchyTree);
 
             Eccentr_Thickness.IsEnabled = false;
 
-            if (figure is PolygonMy polyg)
+            if (figure is IPolygonMy polyg)
             {
                 polygonMy = polyg;
                 SideChoose.Items.Clear();
@@ -51,7 +51,7 @@ namespace _5Laba
                 if (polygonMy.points.Count > 0) SideChoose.SelectedIndex = 0;
             }
             Ellipse_CenterInFocus.IsEnabled = false;
-            if (figure is Circle cir)
+            if (figure is ICircle cir)
             {
                 circle = cir;
                 Ellipse_CenterInFocus.IsEnabled = true;
@@ -78,7 +78,7 @@ namespace _5Laba
                 AngleBox.IsEnabled = false;
                 Eccentr_Thickness.IsEnabled = true;
             }
-            if (figure is AllFigures scene)
+            if (figure is IScene scene)
             {
                 X_cord_glob.IsEnabled = true;
                 Y_cord_glob.IsEnabled = true;
@@ -105,7 +105,7 @@ namespace _5Laba
         public void UpdateData()
         {
             Figure_Name.Text = figure.name;
-            FigureMy par = figure.parent;
+            IFigureMy par = figure.parent;
             Borders_Values.Content = "Границы (В.Л и Н.П.): " + $"({figure.b_p1.X.ToString("F0")},{figure.b_p1.Y.ToString("F0")}) и ({figure.b_p2.X.ToString("F0")},{figure.b_p2.Y.ToString("F0")})";
             if (par != null)
             {
@@ -177,7 +177,7 @@ namespace _5Laba
         {
             if (figure.parent != null)
                 figure.parent.children.Remove(figure);
-            SE.Scene.children.Remove(figure); // если верхнего уровня
+            SE.se.Scene.children.Remove(figure); // если верхнего уровня
             figure.canva.Children.Clear(); // удалить визуальные элементы
             this.Close();
         }
@@ -192,7 +192,7 @@ namespace _5Laba
             if (figure.parent != null)
             {
                 figure.parent.children.Remove(figure);
-                SE.Scene.children.Add(figure); // поднимаем наверх
+                SE.se.Scene.children.Add(figure); // поднимаем наверх
                 figure.parent = null;
             }
             this.Close();
@@ -326,8 +326,8 @@ namespace _5Laba
             if (FillColorComboBox.SelectedItem is FigureColor selectedColor)
             {
                 // для круга и многоугольника
-                if (figure is Circle circle) circle.color = selectedColor.ToBrush();
-                else if (figure is PolygonMy poly) poly.color = selectedColor.ToBrush();
+                if (figure is ICircle circle) circle.color = selectedColor.ToBrush();
+                else if (figure is IPolygonMy poly) poly.color = selectedColor.ToBrush();
 
                 figure.Draw();
             }
@@ -338,7 +338,7 @@ namespace _5Laba
             if (Circle_LineColorComboBox.SelectedItem is FigureColor selectedColor)
             {
                 // для круга и многоугольника
-                if (figure is Circle circle) circle.stroke_cir = selectedColor.ToBrush();
+                if (figure is ICircle circle) circle.stroke_cir = selectedColor.ToBrush();
                 figure.Draw();
             }
         }
@@ -349,7 +349,7 @@ namespace _5Laba
             if (Figure_Name.Text.Length > 0)
             {
                 figure.name = Figure_Name.Text;
-                SE.UpdateHierarchy();
+                SE.se.UpdateHierarchy();
             }
         }
 
@@ -357,7 +357,7 @@ namespace _5Laba
         {
             try
             {
-                FigureMy par = figure.parent;
+                IFigureMy par = figure.parent;
                 double newX = Convert.ToDouble(X_cord_glob.Text);
                 double dx;
 
@@ -383,7 +383,7 @@ namespace _5Laba
         {
             try
             {
-                FigureMy par = figure.parent;
+                IFigureMy par = figure.parent;
                 double newY = Convert.ToDouble(Y_cord_glob.Text);
                 double dy;
 
@@ -463,7 +463,7 @@ namespace _5Laba
         {
             try
             {
-                if (figure is Circle cir)
+                if (figure is ICircle cir)
                 {
                     cir.stroke_thickness_cir = Convert.ToInt32(Circle_Thickness.Text);
                     cir.Move();
@@ -481,7 +481,7 @@ namespace _5Laba
         {
             try
             {
-                if (figure is SuperFigure sf)
+                if (figure is ISuperFigure sf)
                     sf.Rotate(Convert.ToDouble(Angle_box.Text));
                 else
                 {
@@ -501,7 +501,7 @@ namespace _5Laba
 
         private void Eccentr_TextChanged(object sender, TextChangedEventArgs e)
         {
-            if (figure is Circle sir1)
+            if (figure is ICircle sir1)
             {
                 try
                 {
@@ -535,12 +535,12 @@ namespace _5Laba
             figure.RW = null;
             if (polygonMy != null)
             {
-                foreach (Side s in polygonMy.sides)
+                foreach (ISide s in polygonMy.sides)
                 {
                     s.Deselect();
                 }
             }
-            SE.UnRegister(HierarchyTree);
+            SE.se.UnRegister(HierarchyTree);
         }
 
         private void DeleteButton_Click_1(object sender, RoutedEventArgs e)
@@ -551,7 +551,7 @@ namespace _5Laba
             figure.RW = null;
             if (polygonMy != null)
             {
-                foreach (Side s in polygonMy.sides)
+                foreach (ISide s in polygonMy.sides)
                 {
                     s.Deselect();
                 }
@@ -562,7 +562,7 @@ namespace _5Laba
         {
             if (HierarchyTree.SelectedItem is TreeViewItem item)
             {
-                if (item.Tag is FigureMy fig)
+                if (item.Tag is IFigureMy fig)
                 {
                     fig.Edit();
                 }
@@ -581,7 +581,7 @@ namespace _5Laba
 
         private void SaveButton_Click_1(object sender, RoutedEventArgs e)
         {
-            SE.SaveFigure(figure);
+            SE.se.SaveFigure(figure);
         }
 
         private void SaveFigureToFile_Click(object sender, RoutedEventArgs e)
@@ -600,7 +600,7 @@ namespace _5Laba
             {
                 string path = dialog.FileName;
 
-                FigureFactory.SaveToFile(figure, path);
+                SE.FF.SaveToFile(figure, path);
             }
         }
 

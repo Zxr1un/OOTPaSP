@@ -1,8 +1,9 @@
-﻿using _5Laba_library;
+﻿using _5Laba_InterfacesLibrary;
+using Microsoft.Win32;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Microsoft.Win32;
+using System.Reflection;
 
 namespace _5Laba
 {
@@ -14,55 +15,83 @@ namespace _5Laba
     {
         public MainWindow()
         {
-            WindowsFactory.Current = new WindowsFactoryCurrent();
-            SE.MW = this;
             InitializeComponent();
-            SE.canva = Canva;
-            SE.Register(HierarchyTree);
+            SE.se = new SEref();
+            SE.se.MW = this;
+            SE.se.canva = Canva;
+
+            string path = "d:\\Zaxar_sd\\_BSUIR_Study\\__2\\OOTaSP\\5laba\\_5Laba_library\\bin\\Debug\\net8.0-windows\\_5Laba_library.dll";
+            Assembly asm = Assembly.LoadFrom(path);
+            Type factoryType = asm.GetTypes()
+            .First(t =>
+               typeof(IFigureFactory)
+               .IsAssignableFrom(t)
+               && !t.IsInterface
+               && !t.IsAbstract);
+
+            SE.FF =
+                (IFigureFactory)
+                Activator.CreateInstance(
+                    factoryType,
+                    null,
+                    SE.se,
+                    new WFC()
+                );
+            
+            SE.se.init();
+            SE.wfc = new WFC();
+            SE.se.Register(HierarchyTree);
             HierarchyTree.MouseDoubleClick += HierarchyTree_MouseDoubleClick;
             this.WindowState = WindowState.Maximized;
+            
 
         }
 
 
         private void CreateCircle_Click(object sender, RoutedEventArgs e)
         {
-            Circle cir = new Circle();
+            ICircle cir = SE.FF.newC();
             cir.base_init();
         }
 
         private void CreateTriangle_Click(object sender, RoutedEventArgs e)
         {
-            Triangle tr = new Triangle();
-            tr.base_init();
+            IPolygonMy p = SE.FF.newP(3);
+            p.base_init();
         }
 
         private void CreateSquare_Click(object sender, RoutedEventArgs e)
         {
-            RectangleMy rec = new RectangleMy();
-            rec.base_init();
+            IPolygonMy p = SE.FF.newP(4);
+            p.base_init();
         }
 
         private void CreatePolygon_Click(object sender, RoutedEventArgs e)
         {
-            HandlePolygon hp = new HandlePolygon();
+            IHandlePolygon hp = SE.FF.newHP();
             hp.Start();
         }
         private void ClearScene_Click(object sender, RoutedEventArgs e)
         {
-            SE.Scene.Delete();
-            SE.UpdateHierarchy();
+            SE.se.Scene.Delete();
+            SE.se.UpdateHierarchy();
         }
         private void CreateTrapezioid_Click_Click(object sender, RoutedEventArgs e)
         {
-            Trapezoid trapezoid = new Trapezoid();
-            trapezoid.base_init();
+            IPolygonMy p = SE.FF.newP(4);
+            p.name = SE.se.Get_nomber() + "_" + "Трапеция";
+            p.points.Clear();
+            p.points.Add(new(-50, -50));
+            p.points.Add(new(-25, 50));
+            p.points.Add(new(25, 50));
+            p.points.Add(new(50, -50));
+            p.base_init();
         }
 
         private void CreatePentagon_Click(object sender, RoutedEventArgs e)
         {
-            Pentagon pentagon = new Pentagon();
-            pentagon.base_init();
+            IPolygonMy p = SE.FF.newP(5);
+            p.base_init();
         }
 
 
@@ -70,9 +99,9 @@ namespace _5Laba
         private void HierarchyTree_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
         {
             if (HierarchyTree.SelectedItem is TreeViewItem item &&
-                item.Tag is FigureMy fig)
+                item.Tag is IFigureMy fig)
             {
-                SE.Select(fig);
+                SE.se.Select(fig);
             }
         }
 
@@ -80,7 +109,7 @@ namespace _5Laba
         {
             if (HierarchyTree.SelectedItem is TreeViewItem item)
             {
-                if (item.Tag is FigureMy fig)
+                if (item.Tag is IFigureMy fig)
                 {
                     fig.Edit();
                 }
@@ -94,11 +123,11 @@ namespace _5Laba
 
         private void Unite_Click(object sender, RoutedEventArgs e)
         {
-            if(SE.selected.Count > 1)
+            if(SE.se.selected.Count > 1)
             {
-                SuperFigure SF = new();
+                ISuperFigure SF = SE.FF.newSF();
                 SF.base_init();
-                List<FigureMy> copyList = SE.selected.ToList();
+                List<IFigureMy> copyList = SE.se.selected.ToList();
                 for (int i = copyList.Count - 1; i >= 0; i--)
                 {
                     for (int j = copyList.Count - 1; j >= 0; j--)
@@ -115,19 +144,19 @@ namespace _5Laba
                     return;
                 }
 
-                foreach (FigureMy s in copyList)
+                foreach (IFigureMy s in copyList)
                 {
                     SF.AddFigure(s);
                 }
-                SE.DeselectAll();
-                SE.Select(SF);
+                SE.se.DeselectAll();
+                SE.se.Select(SF);
                 
             }
         }
 
         public void SetUniteEnabled()
         {
-            Unite.IsEnabled = SE.selected.Count > 1;
+            Unite.IsEnabled = SE.se.selected.Count > 1;
         }
         public void SetUniteDisabled()
         {
@@ -139,7 +168,7 @@ namespace _5Laba
 
             if (e.OriginalSource == Canva)
             {
-                SE.DeselectAll();
+                SE.se.DeselectAll();
             }
         }
 
@@ -189,8 +218,8 @@ namespace _5Laba
 
                 string json = System.IO.File.ReadAllText(path);
 
-                FigureMy fig = FigureFactory.Load(json);
-                if(fig is AllFigures AF)
+                IFigureMy fig = SE.FF.Load(json);
+                if(fig is IScene AF)
                 {
                     MessageBoxResult result = System.Windows.MessageBox.Show(
                         "В файле была обнаружена сцена, загрузить её? (все не сохранённые изменения будут потеряны)",
@@ -200,12 +229,12 @@ namespace _5Laba
 
                     if (result == MessageBoxResult.Yes)
                     {
-                        SE.Scene.Delete();
-                        SE.Scene = AF;
-                        SE.Scene.Insert();
+                        SE.se.Scene.Delete();
+                        SE.se.Scene = AF;
+                        SE.se.Scene.Insert();
                     }
                 }
-                else SE.SaveFigure(fig);
+                else SE.se.SaveFigure(fig);
             }
         }
 
@@ -225,7 +254,7 @@ namespace _5Laba
             {
                 string path = dialog.FileName;
 
-                FigureFactory.SaveToFile(SE.Scene, path);
+                SE.FF.SaveToFile(SE.se.Scene, path);
             }
         }
         //не использую
